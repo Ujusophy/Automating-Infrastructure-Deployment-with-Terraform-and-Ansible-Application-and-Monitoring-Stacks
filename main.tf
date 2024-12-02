@@ -119,7 +119,7 @@ resource "aws_instance" "web_server" {
   }
 
   provisioner "file" {
-  source      = "C:/Users/LENOVO/cv-1/ansible-setup/network.yml"
+  source      = "./ansible-setup/network.yml"
   destination = "/tmp/network.yml"
   connection {
     type        = "ssh"
@@ -130,7 +130,7 @@ resource "aws_instance" "web_server" {
 }
 
 provisioner "file" {
-  source      = "C:/Users/LENOVO/cv-1/ansible-setup/monitoring.yml"
+  source      = "./ansible-setup/monitoring.yml"
   destination = "/tmp/monitoring.yml"
   connection {
     type        = "ssh"
@@ -141,7 +141,7 @@ provisioner "file" {
 }
 
 provisioner "file" {
-  source      = "C:/Users/LENOVO/cv-1/ansible-setup/site.yml"
+  source      = "./ansible-setup/site.yml"
   destination = "/tmp/site.yml"
   connection {
     type        = "ssh"
