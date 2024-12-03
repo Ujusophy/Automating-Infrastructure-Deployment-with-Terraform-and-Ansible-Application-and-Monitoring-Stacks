@@ -102,7 +102,7 @@ The application stack Ansible role will pull these images from Docker Hub.
   Write a detailed blog post documenting your approach, the architecture, and the deployment process. The blog should include the architecture diagram and provide insights   into the tools used, the challenges faced, and how you overcame them. Publish the post on any blog platform of your choice (e.g., Medium, Dev.to, personal blog).
   Share the link to your blog post in the submission.
 
-Submit your project via this [submission form](#).
+Submit your project via this [submission form](https://forms.gle/QYkvXSAJeLziX5CFA)
 
 ---
 
