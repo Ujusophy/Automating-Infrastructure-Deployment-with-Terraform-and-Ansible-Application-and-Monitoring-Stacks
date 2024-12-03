@@ -61,6 +61,69 @@ resource "aws_security_group" "web_server_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 8090
+    to_port     = 8090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3100
+    to_port     = 3100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5173
+    to_port     = 5173
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -72,6 +135,7 @@ resource "aws_security_group" "web_server_sg" {
     Name = "web_server_sg"
   }
 }
+
 
 resource "tls_private_key" "web_server_key" {
   algorithm = "RSA"
@@ -118,17 +182,6 @@ resource "aws_instance" "web_server" {
     ]
   }
 
-  provisioner "file" {
-  source      = "./ansible-setup/network.yml"
-  destination = "/tmp/network.yml"
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.web_server_key.private_key_pem
-    host        = self.public_ip
-  }
-}
-
 provisioner "file" {
   source      = "./ansible-setup/monitoring.yml"
   destination = "/tmp/monitoring.yml"
@@ -151,6 +204,28 @@ provisioner "file" {
   }
 }
 
+provisioner "file" {
+  source      = "./ansible-setup/config.yml"
+  destination = "/tmp/network.yml"
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.web_server_key.private_key_pem
+    host        = self.public_ip
+  }
+}
+
+provisioner "file" {
+  source      = "./ansible-setup/dash.yml"
+  destination = "/tmp/network.yml"
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.web_server_key.private_key_pem
+    host        = self.public_ip
+  }
+}
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -164,7 +239,6 @@ provisioner "file" {
       "echo \"${self.public_ip} ansible_ssh_user=ubuntu ansible_ssh_private_key_file='/tmp/private_key.pem'\" >> /tmp/inventory.ini",
       "echo '${tls_private_key.web_server_key.private_key_pem}' > /tmp/private_key.pem",
       "chmod 600 /tmp/private_key.pem",
-      "ansible-playbook -i /tmp/inventory.ini /tmp/network.yml -vvv",
       "ansible-playbook -i /tmp/inventory.ini /tmp/config.yml -vvv",
       "ansible-playbook -i /tmp/inventory.ini /tmp/monitoring.yml -vvv",
       "ansible-playbook -i /tmp/inventory.ini /tmp/site.yml -vvv",
